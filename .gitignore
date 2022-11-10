@@ -1,0 +1,5 @@
+.env
+proto
+.DS_Store
+app.env
+.idea

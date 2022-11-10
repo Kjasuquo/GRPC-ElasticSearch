@@ -1,0 +1,29 @@
+package elasticsearch
+
+import (
+	"fmt"
+	"github.com/olivere/elastic/v7"
+	"log"
+)
+
+type DB struct {
+	Client *elastic.Client
+}
+
+func GetESClient() *elastic.Client {
+
+	client, err := elastic.NewClient(elastic.SetURL("http://localhost:9200"),
+		elastic.SetSniff(false),
+		elastic.SetHealthcheck(false))
+
+	if err != nil {
+		log.Fatalf("failed to create client: %v", err)
+	}
+	fmt.Println("Elastic Search initialized...")
+
+	return client
+}
+
+func NewElasticSearchDB(db *elastic.Client) *DB {
+	return &DB{Client: db}
+}
