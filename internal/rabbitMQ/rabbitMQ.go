@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"gitlab.com/dh-backend/search-service/internal/elasticsearch"
 	"log"
 	"time"
 )
@@ -35,7 +34,7 @@ func ConnectRabbitMq(rabbitMQURL string) {
 	Connection = connectRabbitMQ
 }
 
-func PublishToElasticCreationQueue(item map[string]interface{}, orderChannel string) error {
+func PublishToElasticCreationQueue(items []map[string]interface{}, orderChannel string) error {
 	ch, err := Connection.Channel()
 	failOnError(err, "Failed to open a channel at Publish")
 	defer ch.Close()
@@ -54,7 +53,7 @@ func PublishToElasticCreationQueue(item map[string]interface{}, orderChannel str
 		panic(err)
 	}
 
-	body, err := json.Marshal(item)
+	body, err := json.Marshal(items)
 	if err != nil {
 		log.Printf("cannot marshal this: %v", err)
 		return err
@@ -79,18 +78,17 @@ func PublishToElasticCreationQueue(item map[string]interface{}, orderChannel str
 		panic(err)
 	}
 
-	log.Printf("Sent %v\n", body)
 	fmt.Println("Successfully published message to the queue")
 	return nil
 }
 
-func ReadFromQueueToInsertInES(name string, localChannelName string) {
+func ReadFromItemQueueToInsertInES(channel chan map[string]interface{}, localChannelName string) {
 	ch, err := Connection.Channel()
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		localChannelName, // name
+		localChannelName, // index
 		false,            // durable
 		false,            // delete when unused
 		false,            // exclusive
@@ -114,16 +112,13 @@ func ReadFromQueueToInsertInES(name string, localChannelName string) {
 
 	go func() {
 		for d := range msgs {
-			// log.Printf("our consumer received a message from: %v", os.Getpid())
 			log.Printf("Received a message: %s", d.Body)
 			err := json.Unmarshal((d.Body), &Data)
 			if err != nil {
 				log.Fatalf("error%v", err)
 			}
 
-			client := elasticsearch.GetESClient()
-			es := elasticsearch.NewElasticSearchDB(client)
-			es.InsertData(name, Data)
+			channel <- Data
 
 		}
 	}()

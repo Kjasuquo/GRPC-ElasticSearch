@@ -54,6 +54,27 @@ func (es *DB) SearchData(indexName string, query elastic.Query) []map[string]int
 	return results
 }
 
+func (es *DB) SearchAllData(indexName string) []map[string]interface{} {
+	ctx := context.Background()
+	searchResult, err := es.Client.Search().
+		Index(indexName).
+		From(0).Size(10).
+		Pretty(true).
+		Do(ctx)
+	if err != nil {
+		// Handle error
+		log.Fatalf("failed to search: %v", err)
+	}
+	var answer []map[string]interface{}
+	var ttyp map[string]interface{}
+	for _, item := range searchResult.Each(reflect.TypeOf(ttyp)) {
+		if result, ok := item.(map[string]interface{}); ok {
+			answer = append(answer, result)
+		}
+	}
+	return answer
+}
+
 func (es *DB) DeleteData(indexName string, query elastic.Query) {
 	ctx := context.Background()
 
@@ -73,21 +94,5 @@ func (es *DB) DeleteIndex(indexName string) {
 		// Handle error
 		log.Fatalf("failed to delete index: %v", err)
 	}
-	fmt.Println("index deleted")
+	fmt.Println(indexName, " deleted")
 }
-
-//func (es *ElasticSearchDB) UpdateData(indexName string, query elastic.Query, data interface{}) {
-//	ctx := context.Background()
-//	_, err := es.Client.UpdateByQuery().
-//		Index(indexName).
-//		Query(query).
-//		Script(elastic.NewScriptInline("ctx._source.age = 100")).
-//		Do(ctx)
-//
-//	if err != nil {
-//		fmt.Println("[Update]Error=", err)
-//		return
-//	}
-//
-//	fmt.Println("Updated")
-//}
