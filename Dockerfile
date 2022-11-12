@@ -33,7 +33,7 @@ WORKDIR /app
 COPY .env.example .env
 
 # This container exposes port 8081 to the outside world
-EXPOSE 8081
+EXPOSE 50465
 
 # Run the binary program produced by `go install`
 CMD ["./go-app"]
