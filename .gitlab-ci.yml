@@ -45,7 +45,7 @@ deploy:staging:
   variables:
     MANIFEST_PROJECT_ID: 30770380
     TARGET_ENVIRONMENT: development
-    SERVICE: user-service
+    SERVICE: search-service
   script:
     - kubectl config use-context $KUBE_CONTEXT
     - kubectl set image $ROLLOUT_RESOURCE_TYPE/$SERVICE $SERVICE=$CS_DEFAULT_BRANCH_IMAGE -n $TARGET_ENVIRONMENT
