@@ -19,13 +19,11 @@ COPY . .
 RUN go build -o search-sv
 
 
-
-
 # Start fresh from a smaller image
 FROM alpine:3.9
 RUN apk add ca-certificates
 
-COPY --from=build_base /tmp/go-sample-app/restaurant-sv /app/go-app
+COPY --from=build_base /tmp/go-sample-app/search-sv /app/go-app
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
