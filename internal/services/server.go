@@ -5,7 +5,7 @@ import (
 	"gitlab.com/dh-backend/search-service/config"
 	"gitlab.com/dh-backend/search-service/internal/elasticsearch"
 	"gitlab.com/dh-backend/search-service/internal/ports"
-	"gitlab.com/dh-backend/search-service/proto"
+	"gitlab.com/grpc-buffer/proto/go/pkg/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
@@ -14,7 +14,7 @@ import (
 )
 
 type ElasticSearchServer struct {
-	proto.UnimplementedSearchServiceServer
+	proto.UnimplementedMenuServiceServer
 	Elasticsearch ports.Elasticsearch
 }
 
@@ -51,11 +51,9 @@ func Start() {
 		config.ServiceRegistryWithConsul("search-http", "search", ":8205", configs.ConsulAddress, []string{"HTTP", "envoy"})
 	}()
 
-	go func() {
-		InsertMenu()
-	}()
+	RabbitMQServicesForMenu()
 
-	proto.RegisterSearchServiceServer(grpcServer, elasticServiceServer)
+	proto.RegisterMenuServiceServer(grpcServer, elasticServiceServer)
 	log.Printf("server listening at %v", lis.Addr())
 
 	if err := grpcServer.Serve(lis); err != nil {

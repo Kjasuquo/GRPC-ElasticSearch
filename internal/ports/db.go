@@ -8,4 +8,5 @@ type Elasticsearch interface {
 	SearchData(indexName string, query elastic.Query) []map[string]interface{}
 	DeleteData(indexName string, query elastic.Query)
 	DeleteIndex(indexName string)
+	SearchAllData(indexName string) []map[string]interface{}
 }
