@@ -10,9 +10,10 @@ type DB struct {
 	Client *elastic.Client
 }
 
-func GetESClient() *elastic.Client {
+func GetESClient(addr string) *elastic.Client {
 
-	client, err := elastic.NewClient(elastic.SetURL("http://localhost:9200"),
+	client, err := elastic.NewClient(elastic.SetURL(addr),
+		//client, err := elastic.NewClient(elastic.SetURL("http://localhost:9200"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false))
 

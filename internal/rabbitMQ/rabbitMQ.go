@@ -16,7 +16,7 @@ func failOnError(err error, msg string) {
 		log.Panicf("%s: %s", msg, err)
 	}
 }
-func ConnectRabbitMq(rabbitMQURL string) {
+func ConnectCreationRabbitMq(rabbitMQURL string) {
 
 	fmt.Println("Connecting to RabbitMQ ...")
 
