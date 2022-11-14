@@ -3,14 +3,14 @@ module gitlab.com/dh-backend/search-service
 go 1.19
 
 require (
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.3.0
 	github.com/hashicorp/consul/api v1.15.3
 	github.com/hashicorp/vault/api v1.8.2
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/pkg/errors v0.9.1
 	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/spf13/viper v1.14.0
-	gitlab.com/grpc-buffer/proto v0.0.0-20221112080012-b35f582d7433
+	gitlab.com/grpc-buffer/proto v0.0.0-20221114094119-522af70798d3
 	google.golang.org/grpc v1.50.1
 	gorm.io/gorm v1.24.1
 )
@@ -63,10 +63,9 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect

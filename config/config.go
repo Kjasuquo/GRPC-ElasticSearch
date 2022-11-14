@@ -9,16 +9,17 @@ import (
 )
 
 type Config struct {
-	GrpcPort        string `mapstructure:"GRPC_PORT" json:"GRPC_PORT"`
-	VaultSecretPath string `mapstructure:"VAULT_SECRET_PATH"`
-	VaultAddress    string `mapstructure:"VAULT_ADDR"`
-	VaultAuthToken  string `mapstructure:"VAULT_AUTH_TOKEN"`
-	ConsulAddress   string `mapstructure:"consulAddress" json:"consulAddress"`
-	RabbitMQHost    string `mapstructure:"RABBITMQ_HOST" json:"rabbitMQHost"`
-	RabbitMQPort    string `mapstructure:"RABBITMQ_PORT" json:"rabbitMQPort"`
-	RabbitMQUser    string `mapstructure:"RABBITMQ_USER" json:"rabbitMQUser"`
-	RabbitMQPass    string `mapstructure:"RABBITMQ_PASS" json:"rabbitMQPass"`
-	CloudAMQPUrl    string `mapstructure:"CLOUDAMQP_URL" json:"cloudAMQPUrl"`
+	GrpcPort         string `mapstructure:"GRPC_PORT" json:"GRPC_PORT"`
+	VaultSecretPath  string `mapstructure:"VAULT_SECRET_PATH"`
+	VaultAddress     string `mapstructure:"VAULT_ADDR"`
+	VaultAuthToken   string `mapstructure:"VAULT_AUTH_TOKEN"`
+	ConsulAddress    string `mapstructure:"consulAddress" json:"consulAddress"`
+	RabbitMQHost     string `mapstructure:"RABBITMQ_HOST" json:"rabbitMQHost"`
+	RabbitMQPort     string `mapstructure:"RABBITMQ_PORT" json:"rabbitMQPort"`
+	RabbitMQUser     string `mapstructure:"RABBITMQ_USER" json:"rabbitMQUser"`
+	RabbitMQPass     string `mapstructure:"RABBITMQ_PASS" json:"rabbitMQPass"`
+	CloudAMQPUrl     string `mapstructure:"CLOUDAMQP_URL" json:"cloudAMQPUrl"`
+	ElasticSearchUrl string `mapstructure:"ELASTICSEARCH_URL" json:"elasticSearchUrl"`
 }
 
 func ReadConfigs(path string) *Config {
@@ -54,11 +55,14 @@ func ReadConfigs(path string) *Config {
 	}
 
 	// start rabbitMQ connection
-	rabbitMQ.ConnectRabbitMq(rabbitMQUrl)
+	rabbitMQ.ConnectCreationRabbitMq(rabbitMQUrl)
+
+	//rabbitMQ.ConnectCreationRabbitMq("amqp://guest:guest@localhost:5672/")
 
 	configs := &Config{
-		GrpcPort:      config.GrpcPort,
-		ConsulAddress: config.ConsulAddress,
+		GrpcPort:         config.GrpcPort,
+		ConsulAddress:    config.ConsulAddress,
+		ElasticSearchUrl: config.ElasticSearchUrl,
 	}
 
 	return configs

@@ -14,7 +14,7 @@ import (
 )
 
 type ElasticSearchServer struct {
-	proto.UnimplementedMenuServiceServer
+	proto.UnimplementedSearchServiceServer
 	Elasticsearch ports.Elasticsearch
 }
 
@@ -28,7 +28,7 @@ func Start() {
 	}
 	fmt.Println("PORT:", PORT)
 
-	client := elasticsearch.GetESClient()
+	client := elasticsearch.GetESClient(configs.ElasticSearchUrl)
 	es := elasticsearch.NewElasticSearchDB(client)
 	elasticServiceServer := &ElasticSearchServer{
 		Elasticsearch: es,
@@ -51,9 +51,11 @@ func Start() {
 		config.ServiceRegistryWithConsul("search-http", "search", ":8205", configs.ConsulAddress, []string{"HTTP", "envoy"})
 	}()
 
-	RabbitMQServicesForMenu()
+	go func() {
+		RabbitMQServicesForMenu()
+	}()
 
-	proto.RegisterMenuServiceServer(grpcServer, elasticServiceServer)
+	proto.RegisterSearchServiceServer(grpcServer, elasticServiceServer)
 	log.Printf("server listening at %v", lis.Addr())
 
 	if err := grpcServer.Serve(lis); err != nil {
