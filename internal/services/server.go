@@ -6,11 +6,21 @@ import (
 	"gitlab.com/dh-backend/search-service/internal/elasticsearch"
 	"gitlab.com/dh-backend/search-service/internal/ports"
 	"gitlab.com/grpc-buffer/proto/go/pkg/proto"
+	//"gitlab.com/dh-backend/search-service/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"log"
 	"net"
+)
+
+const (
+	ItemIndex              = "item"
+	PackageIndex           = "package"
+	ItemSuggestionIndex    = "item-suggestions"
+	PackageSuggestionIndex = "package-suggestions"
+	QueryField             = "Name"
+	MenuChannel            = "menuCreationChannel"
 )
 
 type ElasticSearchServer struct {
@@ -27,6 +37,8 @@ func Start() {
 		PORT = ":8080"
 	}
 	fmt.Println("PORT:", PORT)
+
+	log.Println("elastic search url", configs.ElasticSearchUrl)
 
 	client := elasticsearch.GetESClient(configs.ElasticSearchUrl)
 	es := elasticsearch.NewElasticSearchDB(client)
@@ -45,6 +57,26 @@ func Start() {
 	fmt.Println("consul address: ", configs.ConsulAddress)
 
 	healthpb.RegisterHealthServer(grpcServer, health.NewServer())
+
+	go func() {
+		_, err := elasticServiceServer.Elasticsearch.SearchAllData(PackageSuggestionIndex)
+		if err != nil {
+			err := elasticServiceServer.Elasticsearch.CreateSuggestionIndex(PackageSuggestionIndex)
+			if err != nil {
+				log.Fatalf("Cannot create package-suggestion Index: %v", err)
+			}
+		}
+	}()
+
+	go func() {
+		_, err = elasticServiceServer.Elasticsearch.SearchAllData(ItemSuggestionIndex)
+		if err != nil {
+			err := elasticServiceServer.Elasticsearch.CreateSuggestionIndex(ItemSuggestionIndex)
+			if err != nil {
+				log.Fatalf("Cannot create item-suggestion Index: %v", err)
+			}
+		}
+	}()
 
 	go func() {
 		config.ServiceRegistryWithConsul("search-grpc", "search", PORT, configs.ConsulAddress, []string{"GRPC", "backend"})

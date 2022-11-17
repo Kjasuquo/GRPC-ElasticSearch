@@ -13,7 +13,7 @@ func RabbitMQServicesForMenu() {
 	client := elasticsearch.GetESClient(configs.ElasticSearchUrl)
 	es := elasticsearch.NewElasticSearchDB(client)
 
-	go rabbitMQ.ReadFromItemQueueToInsertInES(channel, "menuCreationChannel")
+	go rabbitMQ.ReadFromItemQueueToInsertInES(channel, MenuChannel)
 
 	var forever chan struct{}
 	go func() {
@@ -26,10 +26,24 @@ func RabbitMQServicesForMenu() {
 			_, okP := Data["Images"]
 
 			if okI {
-				es.InsertData("item", Data)
+				err := es.InsertData(ItemIndex, Data)
+				if err != nil {
+					log.Printf("Error while inserting data in ES: %v", err)
+				}
+				err = es.InsertData(ItemSuggestionIndex, Data)
+				if err != nil {
+					log.Printf("Error Insering Item for suggestion: %v", err)
+				}
 				log.Println("Item Inserted")
 			} else if okP {
-				es.InsertData("package", Data)
+				err := es.InsertData(PackageIndex, Data)
+				if err != nil {
+					log.Printf("Error while inserting data in ES: %v", err)
+				}
+				err = es.InsertData(PackageSuggestionIndex, Data)
+				if err != nil {
+					log.Printf("Error Insering Package for suggestion: %v", err)
+				}
 				log.Println("Package Inserted")
 			}
 
