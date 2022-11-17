@@ -377,8 +377,6 @@ github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
-gitlab.com/grpc-buffer/proto v0.0.0-20221114094119-522af70798d3 h1:Jh97lG+pm+Au3KnUy+YQYR3iAHflJSY/KmZaEGGd6v4=
-gitlab.com/grpc-buffer/proto v0.0.0-20221114094119-522af70798d3/go.mod h1:a1RYztjQFr3CAU5ewy+vFXR8Wj5u7LBhQS5uHUMYJvM=
 gitlab.com/grpc-buffer/proto v0.0.0-20221117150904-046a0d9b61b9 h1:l3PsE4X+eur1sNnWzxNF3AIZ6yJSjSQBS5mzyM/d0UQ=
 gitlab.com/grpc-buffer/proto v0.0.0-20221117150904-046a0d9b61b9/go.mod h1:a1RYztjQFr3CAU5ewy+vFXR8Wj5u7LBhQS5uHUMYJvM=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
@@ -679,8 +677,6 @@ google.golang.org/genproto v0.0.0-20201210142538-e3217bee35cc/go.mod h1:FWY/as6D
 google.golang.org/genproto v0.0.0-20201214200347-8c77b98c765d/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20210108203827-ffc7fda8c3d7/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
 google.golang.org/genproto v0.0.0-20210226172003-ab064af71705/go.mod h1:FWY/as6DDZQgahTzZj3fqbO1CbirC29ZNUFHwi0/+no=
-google.golang.org/genproto v0.0.0-20221111202108-142d8a6fa32e h1:azcyH5lGzGy7pkLCbhPe0KkKxsM7c6UA/FZIXImKE7M=
-google.golang.org/genproto v0.0.0-20221111202108-142d8a6fa32e/go.mod h1:rZS5c/ZVYMaOGBfO68GWtjOw/eLaZM1X6iVtgjZ+EWg=
 google.golang.org/genproto v0.0.0-20221116193143-41c2ba794472 h1:kIfItBRE5gkUKpH4H5lNGciZbka1JrmRli3ArqrKFkA=
 google.golang.org/genproto v0.0.0-20221116193143-41c2ba794472/go.mod h1:rZS5c/ZVYMaOGBfO68GWtjOw/eLaZM1X6iVtgjZ+EWg=
 google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZiDr8c=

@@ -12,6 +12,7 @@ require (
 	github.com/spf13/viper v1.14.0
 	gitlab.com/grpc-buffer/proto v0.0.0-20221117150904-046a0d9b61b9
 	google.golang.org/grpc v1.50.1
+	google.golang.org/protobuf v1.28.1
 	gorm.io/gorm v1.24.1
 )
 
@@ -71,7 +72,6 @@ require (
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	google.golang.org/genproto v0.0.0-20221116193143-41c2ba794472 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
