@@ -13,7 +13,6 @@ type DB struct {
 func GetESClient(addr string) *elastic.Client {
 
 	client, err := elastic.NewClient(elastic.SetURL(addr),
-		//client, err := elastic.NewClient(elastic.SetURL("http://localhost:9200"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false))
 

@@ -23,7 +23,7 @@ func RabbitMQServicesForMenu() {
 
 			Data, _ := <-channel
 			_, okI := Data["Image"]
-			_, okP := Data["Images"]
+			_, okP := Data["packageID"]
 
 			if okI {
 				err := es.InsertData(ItemIndex, Data)
