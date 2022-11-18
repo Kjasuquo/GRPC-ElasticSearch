@@ -9,17 +9,21 @@ import (
 )
 
 type Config struct {
-	GrpcPort         string `mapstructure:"GRPC_PORT" json:"GRPC_PORT"`
-	VaultSecretPath  string `mapstructure:"VAULT_SECRET_PATH"`
-	VaultAddress     string `mapstructure:"VAULT_ADDR"`
-	VaultAuthToken   string `mapstructure:"VAULT_AUTH_TOKEN"`
-	ConsulAddress    string `mapstructure:"consulAddress" json:"consulAddress"`
-	RabbitMQHost     string `mapstructure:"RABBITMQ_HOST" json:"rabbitMQHost"`
-	RabbitMQPort     string `mapstructure:"RABBITMQ_PORT" json:"rabbitMQPort"`
-	RabbitMQUser     string `mapstructure:"RABBITMQ_USER" json:"rabbitMQUser"`
-	RabbitMQPass     string `mapstructure:"RABBITMQ_PASS" json:"rabbitMQPass"`
-	CloudAMQPUrl     string `mapstructure:"CLOUDAMQP_URL" json:"cloudAMQPUrl"`
-	ElasticSearchUrl string `mapstructure:"ELASTICSEARCH_URL" json:"elasticSearchUrl"`
+	GrpcPort          string `mapstructure:"GRPC_PORT" json:"GRPC_PORT"`
+	VaultSecretPath   string `mapstructure:"VAULT_SECRET_PATH"`
+	VaultAddress      string `mapstructure:"VAULT_ADDR"`
+	VaultAuthToken    string `mapstructure:"VAULT_AUTH_TOKEN"`
+	ConsulAddress     string `mapstructure:"consulAddress" json:"consulAddress"`
+	RabbitMQHost      string `mapstructure:"RABBITMQ_HOST" json:"rabbitMQHost"`
+	RabbitMQPort      string `mapstructure:"RABBITMQ_PORT" json:"rabbitMQPort"`
+	RabbitMQUser      string `mapstructure:"RABBITMQ_USER" json:"rabbitMQUser"`
+	RabbitMQPass      string `mapstructure:"RABBITMQ_PASS" json:"rabbitMQPass"`
+	CloudAMQPUrl      string `mapstructure:"CLOUDAMQP_URL" json:"cloudAMQPUrl"`
+	ElasticSearchUrl  string `mapstructure:"ELASTICSEARCH_URL" json:"elasticSearchUrl"`
+	ElasticSearchUser string `mapstructure:"ELASTICSEARCH_USER" json:"elasticSearchUser"`
+	ElasticSearchPass string `mapstructure:"ELASTICSEARCH_PASS" json:"elasticSearchPass"`
+	ElasticSearchPort string `mapstructure:"ELASTICSEARCH_PORT" json:"elasticSearchPort"`
+	ElasticSearchHost string `mapstructure:"ELASTICSEARCH_HOST" json:"elasticSearchHost"`
 }
 
 func ReadConfigs(path string) *Config {
@@ -57,12 +61,21 @@ func ReadConfigs(path string) *Config {
 	// start rabbitMQ connection
 	rabbitMQ.ConnectCreationRabbitMq(rabbitMQUrl)
 
-	//rabbitMQ.ConnectCreationRabbitMq("amqp://guest:guest@localhost:5672/")
+	var elasticSearchUrl string
+	if config.ElasticSearchUrl == "" {
+		elasticSearchUrl = fmt.Sprintf("http://%s:%s@%s:%s/",
+			config.ElasticSearchUser,
+			config.ElasticSearchPass,
+			config.ElasticSearchHost,
+			config.ElasticSearchPort)
+	} else {
+		elasticSearchUrl = config.ElasticSearchUrl
+	}
 
 	configs := &Config{
 		GrpcPort:         config.GrpcPort,
 		ConsulAddress:    config.ConsulAddress,
-		ElasticSearchUrl: config.ElasticSearchUrl,
+		ElasticSearchUrl: elasticSearchUrl,
 	}
 
 	return configs
