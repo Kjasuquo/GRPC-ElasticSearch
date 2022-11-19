@@ -31,7 +31,6 @@ func (s *ElasticSearchServer) SearchSuggestions(ctx context.Context, req *proto.
 		}
 	}
 
-	log.Println("This is the package suggestions gotten", suggestions)
 	return &proto.InSearchSuggestionsResponse{
 		Status:      codes.OK.String(),
 		Suggestions: suggestions,
@@ -106,9 +105,6 @@ func (s *ElasticSearchServer) SearchService(ctx context.Context, req *proto.InSe
 		}
 	}
 
-	log.Println("This is the package gotten Data", packages)
-	log.Println("This is the item gotten Data", items)
-
 	return &proto.InSearchResponse{
 		Status:          codes.OK.String(),
 		PackageResponse: packages,
@@ -149,8 +145,6 @@ func (s *ElasticSearchServer) SearchItems(ctx context.Context, req *proto.InSear
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot unmarshall items: %v\n", err))
 	}
 
-	log.Println("This is the item gotten Data", items)
-
 	return &proto.InSearchItemResponse{
 		Status:       codes.OK.String(),
 		ItemResponse: items,
@@ -189,8 +183,6 @@ func (s *ElasticSearchServer) SearchPackages(ctx context.Context, req *proto.InS
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot unmarshall packages: %v\n", err))
 	}
 
-	log.Println("This is the packages gotten Data", packages)
-
 	return &proto.InSearchPackageResponse{
 		Status:          codes.OK.String(),
 		PackageResponse: packages,
@@ -209,8 +201,6 @@ func (s *ElasticSearchServer) SearchItemSuggestions(ctx context.Context, req *pr
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Items Suggestion Error: %v\n", err))
 	}
 
-	log.Println("This is the item suggestions gotten Data", result)
-
 	return &proto.InSearchItemSuggestionsResponse{
 		Status:      codes.OK.String(),
 		Suggestions: result,
@@ -228,7 +218,7 @@ func (s *ElasticSearchServer) SearchPackageSuggestions(ctx context.Context,
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Packages Suggestion Error: %v\n", err))
 	}
-	log.Println("This is the package suggestions gotten", result)
+
 	return &proto.InSearchPackageSuggestionsResponse{
 		Status:      codes.OK.String(),
 		Suggestions: result,

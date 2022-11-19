@@ -36,7 +36,6 @@ func Start() {
 	if PORT == ":" || PORT == "" {
 		PORT = ":8080"
 	}
-	fmt.Println("PORT:", PORT)
 
 	log.Println("elastic search url", configs.ElasticSearchUrl)
 
