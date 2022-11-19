@@ -66,14 +66,28 @@ func Start() {
 				log.Fatalf("Cannot create package-suggestion Index: %v", err)
 			}
 		}
-	}()
 
-	go func() {
 		_, err = elasticServiceServer.Elasticsearch.SearchAllData(ItemSuggestionIndex)
 		if err != nil {
 			err := elasticServiceServer.Elasticsearch.CreateSuggestionIndex(ItemSuggestionIndex)
 			if err != nil {
 				log.Fatalf("Cannot create item-suggestion Index: %v", err)
+			}
+		}
+
+		_, err = elasticServiceServer.Elasticsearch.SearchAllData(PackageIndex)
+		if err != nil {
+			err := elasticServiceServer.Elasticsearch.CreateIndex(PackageIndex)
+			if err != nil {
+				log.Fatalf("Cannot create package Index: %v", err)
+			}
+		}
+
+		_, err = elasticServiceServer.Elasticsearch.SearchAllData(ItemIndex)
+		if err != nil {
+			err := elasticServiceServer.Elasticsearch.CreateIndex(ItemIndex)
+			if err != nil {
+				log.Fatalf("Cannot create item Index: %v", err)
 			}
 		}
 	}()

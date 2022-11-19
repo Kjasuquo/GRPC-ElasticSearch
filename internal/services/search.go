@@ -12,6 +12,111 @@ import (
 	"log"
 )
 
+// SearchSuggestions gives suggestions for both items and packages
+func (s *ElasticSearchServer) SearchSuggestions(ctx context.Context, req *proto.InSearchSuggestionsRequest) (*proto.InSearchSuggestionsResponse, error) {
+	index := req.GetIndex()
+	value := req.GetValue()
+	var suggestions []string
+	var err error
+
+	if index == "package" {
+		suggestions, err = s.Elasticsearch.SearchSuggestion(PackageSuggestionIndex, QueryField, value)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, fmt.Sprintf("Packages Suggestion Error: %v\n", err))
+		}
+	} else if index == "item" {
+		suggestions, err = s.Elasticsearch.SearchSuggestion(ItemSuggestionIndex, QueryField, value)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, fmt.Sprintf("Items Suggestion Error: %v\n", err))
+		}
+	}
+
+	log.Println("This is the package suggestions gotten", suggestions)
+	return &proto.InSearchSuggestionsResponse{
+		Status:      codes.OK.String(),
+		Suggestions: suggestions,
+	}, nil
+}
+
+// SearchService searches for both items and packages
+func (s *ElasticSearchServer) SearchService(ctx context.Context, req *proto.InSearchRequest) (*proto.InSearchResponse, error) {
+	index := req.GetIndex()
+	value := req.GetValue()
+
+	var result []map[string]interface{}
+	var err error
+
+	if index == "package" {
+		if value == "" {
+			result, err = s.Elasticsearch.SearchAllData(PackageIndex)
+			log.Println("This is the package gotten Data", result)
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Search all Packages Error: %v\n", err))
+			}
+		} else {
+			result, err = s.Elasticsearch.SearchData(PackageIndex, elastic.NewMatchQuery(QueryField, value))
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Search Packages Error: %v\n", err))
+			}
+		}
+	} else if index == "item" {
+		if value == "" {
+			result, err = s.Elasticsearch.SearchAllData(ItemIndex)
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Search all Items Error: %v\n", err))
+			}
+
+		} else {
+			result, err = s.Elasticsearch.SearchData(ItemIndex, elastic.NewMatchQuery(QueryField, value))
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Search Items Error: %v\n", err))
+			}
+		}
+	}
+
+	// Variable to store the response from the search service in the form of a list of items
+	var items []*proto.SearchItem
+
+	// Variable to store the response from the search service in the form of a list of packages
+	var packages []*proto.SearchPackage
+
+	if result != nil {
+		_, okP := result[0]["packageID"]
+		_, okI := result[0]["ItemCategory"]
+
+		Data, err := json.Marshal(result)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot Marshall Result: %v\n", err))
+		}
+
+		// Checking if the response is a list of items or a list of packages
+		if okI {
+			err = json.Unmarshal(Data, &items)
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot unmarshall items: %v\n", err))
+			}
+			log.Println("Items gotten")
+
+		} else if okP {
+			err = json.Unmarshal(Data, &packages)
+			if err != nil {
+				return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot unmarshall packages: %v\n", err))
+			}
+			log.Println("packages gotten")
+		}
+	}
+
+	log.Println("This is the package gotten Data", packages)
+	log.Println("This is the item gotten Data", items)
+
+	return &proto.InSearchResponse{
+		Status:          codes.OK.String(),
+		PackageResponse: packages,
+		ItemResponse:    items,
+	}, nil
+
+}
+
 func (s *ElasticSearchServer) SearchItems(ctx context.Context, req *proto.InSearchItemRequest) (*proto.InSearchItemResponse, error) {
 	value := req.GetValue()
 	var result []map[string]interface{}
@@ -103,6 +208,8 @@ func (s *ElasticSearchServer) SearchItemSuggestions(ctx context.Context, req *pr
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Items Suggestion Error: %v\n", err))
 	}
+
+	log.Println("This is the item suggestions gotten Data", result)
 
 	return &proto.InSearchItemSuggestionsResponse{
 		Status:      codes.OK.String(),

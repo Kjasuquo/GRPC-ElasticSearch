@@ -3,7 +3,7 @@ package ports
 import "github.com/olivere/elastic/v7"
 
 type Elasticsearch interface {
-	CreateIndex(indexName string)
+	CreateIndex(indexName string) error
 	InsertData(indexName string, data interface{}) error
 	SearchData(indexName string, query elastic.Query) ([]map[string]interface{}, error)
 	DeleteData(indexName string, query elastic.Query) error

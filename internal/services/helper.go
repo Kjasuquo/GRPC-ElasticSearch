@@ -22,7 +22,7 @@ func RabbitMQServicesForMenu() {
 		for {
 
 			Data, _ := <-channel
-			_, okI := Data["Image"]
+			_, okI := Data["ItemCategory"]
 			_, okP := Data["packageID"]
 
 			if okI {

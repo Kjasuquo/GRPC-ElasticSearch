@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/olivere/elastic/v7"
-	"log"
 	"reflect"
 )
 
@@ -39,15 +38,17 @@ const mapping = `{
   }
 }`
 
-func (es *DB) CreateIndex(indexName string) {
+func (es *DB) CreateIndex(indexName string) error {
 	// create a new index
 	ctx := context.Background()
 	_, err := es.Client.CreateIndex(indexName).Do(ctx)
 	if err != nil {
 		// Handle error
-		log.Fatalf("failed to create index: %v", err)
+		return err
 	}
-	fmt.Println("index created")
+	fmt.Printf("%s created\n", indexName)
+
+	return nil
 }
 
 func (es *DB) CreateSuggestionIndex(indexName string) error {
