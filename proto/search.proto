@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+
+option go_package = "search/proto";
+
+package search_service.v1;
+
+service searchService {
+  // Menu Search
+  rpc SearchService(InSearchRequest) returns (InSearchResponse) {}
+  rpc SearchSuggestions(InSearchSuggestionsRequest) returns (InSearchSuggestionsResponse) {}
+  rpc SearchItemSuggestions(InSearchItemSuggestionsRequest) returns (InSearchItemSuggestionsResponse) {}
+  rpc SearchPackageSuggestions(InSearchPackageSuggestionsRequest) returns (InSearchPackageSuggestionsResponse) {}
+  rpc SearchItems(InSearchItemRequest) returns (InSearchItemResponse) {}
+  rpc SearchPackages(InSearchPackageRequest) returns (InSearchPackageResponse) {}
+}
+
+// SearchRequest for Item Suggestions
+message InSearchItemSuggestionsRequest{
+  string value =1;
+}
+
+// SearchResponse for Item Suggestions
+message InSearchItemSuggestionsResponse{
+  string status = 1;
+  repeated string suggestions =2;
+}
+
+// SearchRequest for Package Suggestions
+message InSearchPackageSuggestionsRequest{
+  string value =1;
+}
+
+// SearchResponse for Package Suggestions
+message InSearchPackageSuggestionsResponse{
+  string status = 1;
+  repeated string suggestions =2;
+}
+
+// Request for searched items
+message InSearchItemRequest{
+  string value =1;
+}
+
+// Response for searched items
+message InSearchItemResponse {
+  string status = 1;
+  repeated SearchItem item_response = 2;
+}
+
+//Request for searched packages
+message InSearchPackageRequest{
+  string value =1;
+}
+
+// Response for searched packages
+message InSearchPackageResponse {
+  string status = 1;
+  repeated SearchPackage package_response = 2;
+}
+
+// General Search Suggestions
+message InSearchSuggestionsRequest {
+  string index = 1;
+  string value = 2;
+}
+
+message InSearchSuggestionsResponse{
+  string status = 1;
+  repeated string suggestions =2;
+}
+
+// General Search
+message InSearchRequest{
+  string index =1;
+  string value =2;
+}
+
+message InSearchResponse {
+  string status = 1;
+  repeated SearchPackage package_response = 2;
+  repeated SearchItem item_response = 3;
+}
+
+// Package
+message SearchPackage {
+  string name =1;
+  string description =2;
+  string createdAt = 3;
+  string updatedAt = 4;
+  repeated SearchImages images = 5;
+  double estimatedPrice = 6;
+  double maxNumberOfItems = 7;
+  double minNumberOfItems = 8;
+  repeated SearchPackageItem items = 9;
+  string packageID = 10;
+  string categoryID = 11;
+  string serviceAreaID = 12;
+}
+
+message SearchImages {
+  string imageUrl =1;
+}
+
+message SearchPackageItem{
+  string packageItemID = 1;
+  repeated SearchItemData substitutes = 2;
+  string category =  3;
+  string packageID = 4;
+}
+
+message SearchItemData{
+  string itemID = 1;
+  double quantity = 2;
+  double price = 3;
+  bool isRequired = 4;
+  bool isDefault = 5;
+  string description = 6;
+  string units = 7;
+  string name = 8;
+  string image = 9;
+}
+
+// Item
+message SearchItem {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string itemCategoryID = 4;
+  string image = 5;
+  string unit = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
